@@ -1,0 +1,38 @@
+{
+  "steps": [
+    {
+      "name": "gcr.io/cloud-builders/gcloud",
+      "args": [
+        "config",
+        "set",
+        "project",
+        "${_PROJECT_ID}"
+      ]
+    },
+    {
+      "name": "gcr.io/cloud-builders/gcloud",
+      "args": [
+        "functions",
+        "deploy",
+        "${_FUNCTION_NAME}",
+        "--region=us-central1",
+        "--entry-point=main",
+        "--trigger-http",
+        "--allow-unauthenticated",
+        "--source=${_FUNCTION_NAME}/build",
+        "--runtime=nodejs12"
+      ]
+    },
+    {
+      "name": "gcr.io/cloud-builders/gcloud",
+      "args": [
+        "functions",
+        "add-iam-policy-binding",
+        "${_FUNCTION_NAME}",
+        "--region=us-central1",
+        "--member=allUsers",
+        "--role=roles/cloudfunctions.invoker"
+      ]
+    }
+  ]
+}
